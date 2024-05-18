@@ -39,7 +39,7 @@ void rotate(uint8_t x); // поворот
 void setWindow(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1);  // поставить окно
 void start();  // вкл. чипселект
 void end();  // выкл чипселект
-void startSend(uint8_t x0 = 0, uint8_t y0 = 0, uint8_t x1 = 128, uint8_t y1 = 160);  // начало шутрой отправки. Аргументы - координаты области
+void startSend(uint8_t x0 = 0, uint8_t y0 = 0, uint8_t x1 = 128, uint8_t y1 = 160);  // начало шустрой отправки. Аргументы - координаты области
 void sendByte(uint8_t col); // отправить байт
 void send565(uint16_t col); // отправить цвет 565
 ```
