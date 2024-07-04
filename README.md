@@ -7,6 +7,7 @@
 - Поворот
 - Все возможности GyverGFX (графика)
 - Разные цвета
+- Цветные битмапы
 
 ## Зависимости
 GyverGFX и GyverIO
@@ -14,6 +15,12 @@ GyverGFX и GyverIO
 AVR ATmega, возможно esp (не проверял)
 ## Использование
 ```cpp
+// Настройки
+#define TFT_NO_ROTATE  // убрать поворот
+#define TFT_NO_GFX  // убрать графику
+#define TFT_NO_CLRBMP  // убрать битмапы
+#define TFT_NO_PGMBMP  // убрать progmem битмапы
+#define TFT_NO_CHECK_DOT  // не проверять выход за границы дисплея
 // Конструктор
 void microTFT(uint8_t pin_cs, uint8_t pin_dc, uint8_t pin_rst);
 // Инициализация
@@ -23,14 +30,26 @@ void home(); // домой курсор, окно на весь дисп
 void fill(uint16_t clr); // цвет rgb565
 void fill888(uint32_t clr); // цвет rgb888
 void fill323(uint8_t clr); // цвет rgb323
+void fill233(uint8_t clr); // цвет rgb233
 void bckgrnd(uint32_t clr); // цвет фона rgb565
 void bckgrnd888(uint32_t clr); // цвет фона rgb888
 void bckgrnd323(uint32_t clr); // цвет фона rgb323
+void bckgrnd233(uint32_t clr); // цвет фона rgb233
 // Рисование
 void dot(int x, int y, uint8_t fill); // точка
 void fillScrn(uint16_t color); // залить дисп цветом 565
 void fillScrn(byte colorH, byte colorL); // залить дисп цветом из двух байтов
 // + всё из GyverGFX
+// Битмапы
+void bitmapRGB888(uint32_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0);
+void bitmapRGB565(uint16_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0);
+void bitmapRGB323(uint8_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0);
+void bitmapRGB233(uint8_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0);
+void bitmapRGB888_P(const uint32_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0);
+void bitmapRGB565_P(const uint16_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0);
+void bitmapRGB323_P(const uint8_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0);
+void bitmapRGB233_P(const uint8_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0);
+// массив, ширина, высота, координаты. Можно выходить за границы дисплея
 // Поворот
 void flipV(bool x); // отразить по-вертикали
 void flipH(bool x); // отразить по-горизонтали
@@ -95,7 +114,6 @@ void setup() {
       tft.send565(0b0000011111111111);
     }
   }
-  tft.print(millis(
   tft.print(millis() - tmr);
   delay(5000);
   tft.fillScrn(0);
@@ -138,12 +156,12 @@ void loop() {   // жуть
 ```
 ## Версии
 - v1.0 Оно работает
+- v1.1 +цветные битмапы и rgb233
 
 
 ## Планируется потом
 - Полная совместимость с GyverOLED
 - Программное включение/выключение/перезагрузка
-- Цветной битмап
 - Ещё сильнее оптимизировать
 
 ## Баги и обратная связь
