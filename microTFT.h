@@ -1,3 +1,6 @@
+#ifndef MICROTFT_H
+#define MICROTFT_H
+
 #include <GyverGFX.h>
 #include <GyverIO.h>
 #include <SPI.h>
@@ -7,9 +10,13 @@
 //#define ST7735_RAMWR   0x2C
 
 #define rgb888to565(clr) ((((((clr) >> 16) & 0xFF) & 0b11111000) << 8) | (((((clr) >> 8) & 0xFF) & 0b11111100) << 3) | ((((clr) & 0xFF) & 0b11111000) >> 3))
-#define rgb323to888(clr) ((uint32_t)(((clr) & 0b11100000) | 0b00011111) << 16 | (uint32_t)((((clr) & 0b00011000) << 3) | 0b00111111) << 8 | ((((clr) & 0b00000111) << 5) | 0b00011111))
+//#define rgb323to888(clr) ((uint32_t)(((clr) & 0b11100000) | 0b00011111) << 16 | (uint32_t)((((clr) & 0b00011000) << 3) | 0b00111111) << 8 | ((((clr) & 0b00000111) << 5) | 0b00011111))
 
+#ifndef TFT_NO_GFX
 class microTFT : public GyverGFX {
+#else
+class microTFT {
+#endif
   public:
     microTFT(uint8_t pin_cs, uint8_t pin_dc, uint8_t pin_rst) : GyverGFX(128, 160), _cs(pin_cs), _dc(pin_dc), _rst(pin_rst) {
       //_cs = pin_cs;
@@ -29,8 +36,13 @@ class microTFT : public GyverGFX {
     }
     void fill323(uint8_t clr) {  // выбор цвета, 8 бит
       // ****
-      clrH = (clr & 0b11100000) | ((clr & 0b00011000) >> 2);  // мистика
-      clrL = (clr & 0b00000111) << 2;
+      clrH = /*0b00011001 | */(clr & 0b11100000) | ((clr & 0b00011000) >> 2);  // мистика
+      clrL = /*0b11100011 | */(clr & 0b00000111) << 2;
+    }
+    void fill233(uint8_t clr) {  // выбор цвета, 8 бит
+      // ****
+      clrH = /*0b00111000 | */(clr & 0b11000000) | ((clr & 0b00111000) >> 3);  // мистика
+      clrL = /*0b11100011 | */((clr & 0b00000111) << 2);
     }
     void bckgrnd888(uint32_t clr) { // аналогично
       // ****
@@ -41,10 +53,15 @@ class microTFT : public GyverGFX {
       bclrH = (clr & 0xFF00) >> 8;
       bclrL = clr & 0xFF;
     }
-    void bckgrnd323(uint8_t clr) {
+    void bckgrnd323(uint8_t clr) {  // выбор цвета, 8 бит
       // ****
-      bclrH = (clr & 0b11100000) | ((clr & 0b00011000) >> 2);
-      bclrL = (clr & 0b00000111) << 2;
+      bclrH = /*0b00011001 | */(clr & 0b11100000) | ((clr & 0b00011000) >> 2);  // мистика
+      bclrL = /*0b11100011 | */(clr & 0b00000111) << 2;
+    }
+    void bckgrnd233(uint8_t clr) {  // выбор цвета, 8 бит
+      // ****
+      bclrH = /*0b00111000 | */(clr & 0b11000000) | ((clr & 0b00111000) >> 3);  // мистика
+      bclrL = /*0b11100011 | */((clr & 0b00000111) << 2);
     }
     #ifndef TFT_NO_ROTATE // если вкл. поворот
     void flipV(bool x) {  // отразить по-вертикали
@@ -105,6 +122,7 @@ class microTFT : public GyverGFX {
       lcd7735_sendCmd(0x29);//Display on
       //SPI.endTransaction();
     }
+    #ifndef TFT_NO_GFX
     void dot(int x, int y, uint8_t fill) {  // точка
       //Serial.print('Ы');  // отладка. Жутко замедляет вывод
       setWindow(x, y, x + 1, y + 1);
@@ -115,6 +133,153 @@ class microTFT : public GyverGFX {
       //SPI.endTransaction();
       //LCD_CS(1);
     }
+    void update() { // надо. Без него ломается. Мистика
+    }
+    #endif
+    #ifndef TFT_NO_CLRBMP
+    void bitmapRGB888(uint32_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
+      start();
+      startSend(max(x0, 0), max(y0, 0), max(x0+w, 0), max(y0+h, 0));
+      for (size_t i = 0; i < w*h; i++) {
+        #ifndef TFT_NO_CHECK_DOT
+        uint16_t x = (i % w)+x0, y = i / w+y0;
+        #ifndef TFT_NO_ROTATE
+        if (x >= 0 && y >= 0 && x < _rotate & 1 ? 160 : 128 && x < _rotate & 1 ? 128 : 160) {
+        #else
+        if (x >= 0 && y >= 0 && x < 128 && x < 160) {
+        #endif
+        #else {
+        #endif
+          send565(rgb888to565(arr[i]));
+        }
+      }
+    }
+    void bitmapRGB565(uint16_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
+      start();
+      startSend(max(x0, 0), max(y0, 0), max(x0+w, 0), max(y0+h, 0));
+      for (size_t i = 0; i < w*h; i++) {
+        #ifndef TFT_NO_CHECK_DOT
+        uint16_t x = (i % w)+x0, y = i / w+y0;
+        #ifndef TFT_NO_ROTATE
+        if (x >= 0 && y >= 0 && x < _rotate & 1 ? 160 : 128 && x < _rotate & 1 ? 128 : 160) {
+        #else
+        if (x >= 0 && y >= 0 && x < 128 && x < 160) {
+        #endif
+        #else {
+        #endif
+          send565(arr[i]);
+        }
+      }
+    }
+    void bitmapRGB323(uint8_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
+      start();
+      startSend(max(x0, 0), max(y0, 0), max(x0+w, 0), max(y0+h, 0));
+      for (size_t i = 0; i < w*h; i++) {
+        #ifndef TFT_NO_CHECK_DOT
+        uint16_t x = (i % w)+x0, y = i / w+y0;
+        #ifndef TFT_NO_ROTATE
+        if (x >= 0 && y >= 0 && x < _rotate & 1 ? 160 : 128 && x < _rotate & 1 ? 128 : 160) {
+        #else
+        if (x >= 0 && y >= 0 && x < 128 && x < 160) {
+        #endif
+        #else {
+        #endif
+          sendByte((arr[i] & 0b11100000) | ((arr[i] & 0b00011000) >> 2));
+          sendByte(((arr[i] & 0b00000111) << 2));
+        }
+      }
+    }
+    void bitmapRGB233(uint8_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
+      start();
+      startSend(max(x0, 0), max(y0, 0), max(x0+w, 0), max(y0+h, 0));
+      for (size_t i = 0; i < w*h; i++) {
+        #ifndef TFT_NO_CHECK_DOT
+        uint16_t x = (i % w)+x0, y = i / w+y0;
+        #ifndef TFT_NO_ROTATE
+        if (x >= 0 && y >= 0 && x < _rotate & 1 ? 160 : 128 && x < _rotate & 1 ? 128 : 160) {
+        #else
+        if (x >= 0 && y >= 0 && x < 128 && x < 160) {
+        #endif
+        #else {
+        #endif
+          sendByte((arr[i] & 0b11000000) | ((arr[i] & 0b00111000) >> 3));
+          sendByte(((arr[i] & 0b00000111) << 2));
+        }
+      }
+    }
+    #ifndef TFT_PGMBMP
+    void bitmapRGB888_P(const uint32_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
+      start();
+      startSend(max(x0, 0), max(y0, 0), max(x0+w, 0), max(y0+h, 0));
+      for (size_t i = 0; i < w*h; i++) {
+        #ifndef TFT_NO_CHECK_DOT
+        uint16_t x = (i % w)+x0, y = i / w+y0;
+        #ifndef TFT_NO_ROTATE
+        if (x >= 0 && y >= 0 && x < _rotate & 1 ? 160 : 128 && x < _rotate & 1 ? 128 : 160) {
+        #else
+        if (x >= 0 && y >= 0 && x < 128 && x < 160) {
+        #endif
+        #else {
+        #endif
+          send565(rgb888to565(pgm_read_dword(&arr[i])));
+        }
+      }
+    }
+    void bitmapRGB565_P(const uint16_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
+      start();
+      startSend(max(x0, 0), max(y0, 0), max(x0+w, 0), max(y0+h, 0));
+      for (size_t i = 0; i < w*h; i++) {
+        #ifndef TFT_NO_CHECK_DOT
+        uint16_t x = (i % w)+x0, y = i / w+y0;
+        #ifndef TFT_NO_ROTATE
+        if (x >= 0 && y >= 0 && x < _rotate & 1 ? 160 : 128 && x < _rotate & 1 ? 128 : 160) {
+        #else
+        if (x >= 0 && y >= 0 && x < 128 && x < 160) {
+        #endif
+        #else {
+        #endif
+          send565(pgm_read_word(&arr[i]));
+        }
+      }
+    }
+    void bitmapRGB323_P(const uint8_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
+      start();
+      startSend(max(x0, 0), max(y0, 0), max(x0+w, 0), max(y0+h, 0));
+      for (size_t i = 0; i < w*h; i++) {
+        #ifndef TFT_NO_CHECK_DOT
+        uint16_t x = (i % w)+x0, y = i / w+y0;
+        #ifndef TFT_NO_ROTATE
+        if (x >= 0 && y >= 0 && x < _rotate & 1 ? 160 : 128 && x < _rotate & 1 ? 128 : 160) {
+        #else
+        if (x >= 0 && y >= 0 && x < 128 && x < 160) {
+        #endif
+        #else {
+        #endif
+          sendByte((pgm_read_byte(&arr[i]) & 0b11100000) | ((pgm_read_byte(&arr[i]) & 0b00011000) >> 2));
+          sendByte(((pgm_read_byte(&arr[i]) & 0b00000111) << 2));
+        }
+      }
+    }
+    void bitmapRGB233_P(const uint8_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
+      start();
+      startSend(max(x0, 0), max(y0, 0), max(x0+w, 0), max(y0+h, 0));
+      for (size_t i = 0; i < w*h; i++) {
+        #ifndef TFT_NO_CHECK_DOT
+        uint16_t x = (i % w)+x0, y = i / w+y0;
+        #ifndef TFT_NO_ROTATE
+        if (x >= 0 && y >= 0 && x < _rotate & 1 ? 160 : 128 && x < _rotate & 1 ? 128 : 160) {
+        #else
+        if (x >= 0 && y >= 0 && x < 128 && x < 160) {
+        #endif
+        #else {
+        #endif
+          sendByte((pgm_read_byte(&arr[i]) & 0b11000000) | ((pgm_read_byte(&arr[i]) & 0b00111000) >> 3));
+          sendByte(((pgm_read_byte(&arr[i]) & 0b00000111) << 2));
+        }
+      }
+    }
+    #endif
+    #endif
     void start() {  // вкл. чипселект
       LCD_CS(0);
     }
@@ -136,8 +301,6 @@ class microTFT : public GyverGFX {
     }
     void fillScrn(uint16_t color) { // залить дисп
       fillScrn((color & 0xFF00) >> 8, color & 0x00FF);
-    }
-    void update() { // надо. Без него ломается. Мистика
     }
     void fillScrn(byte colorH, byte colorL) { // залить дисп
       home();
@@ -257,3 +420,4 @@ class microTFT : public GyverGFX {
       //_rsts = x;
     }
 };
+#endif
