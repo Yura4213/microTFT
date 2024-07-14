@@ -136,51 +136,57 @@ class microTFT {
     #endif
     #ifndef TFT_NO_CLRBMP
     void bitmapRGB888(uint32_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
+	  w--;h--;
       start();
-      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max(x0+w, /*(int16_t)*/0), max(y0+h, /*(int16_t)*/0));
+      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)x0+w, (int16_t)0), max((int16_t)y0+h, (int16_t)0));
       for (size_t i = 0; i < w*h; i++) {
         #ifndef TFT_NO_CHECK_DOT
-        uint16_t x = (i % w)+x0, y = i / w+y0;
+        int16_t x = (i % (w+1))+x0, y = i / (w+1)+y0;
         #ifndef TFT_NO_ROTATE
-        if (x >= 0 && y >= 0 && x < _rotate & 1 ? 160 : 128 && x < _rotate & 1 ? 128 : 160) {
+        if (x >= 0 && y >= 0 && x < (_rotate & 1 ? 160 : 128) && y < (_rotate & 1 ? 128 : 160)) {
         #else
-        if (x >= 0 && y >= 0 && x < 128 && x < 160) {
+        if (x >= 0 && y >= 0 && x < 128 && y < 160) {
         #endif
-        #else {
+        #else
+		{
         #endif
           send565(rgb888to565(arr[i]));
         }
       }
     }
     void bitmapRGB565(uint16_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
+	  w--;h--;
       start();
-      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max(x0+w, /*(int16_t)*/0), max(y0+h, /*(int16_t)*/0));
+      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)x0+w, (int16_t)0), max((int16_t)y0+h, (int16_t)0));
       for (size_t i = 0; i < w*h; i++) {
         #ifndef TFT_NO_CHECK_DOT
-        uint16_t x = (i % w)+x0, y = i / w+y0;
+        int16_t x = (i % (w+1))+x0, y = i / (w+1)+y0;
         #ifndef TFT_NO_ROTATE
-        if (x >= 0 && y >= 0 && x < _rotate & 1 ? 160 : 128 && x < _rotate & 1 ? 128 : 160) {
+        if (x >= 0 && y >= 0 && x < (_rotate & 1 ? 160 : 128) && y < (_rotate & 1 ? 128 : 160)) {
         #else
-        if (x >= 0 && y >= 0 && x < 128 && x < 160) {
+        if (x >= 0 && y >= 0 && x < 128 && y < 160) {
         #endif
-        #else {
+        #else
+		{
         #endif
           send565(arr[i]);
         }
       }
     }
     void bitmapRGB323(uint8_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
+	  w--;h--;
       start();
-      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max(x0+w, /*(int16_t)*/0), max(y0+h, /*(int16_t)*/0));
+      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)x0+w, (int16_t)0), max((int16_t)y0+h, (int16_t)0));
       for (size_t i = 0; i < w*h; i++) {
         #ifndef TFT_NO_CHECK_DOT
-        uint16_t x = (i % w)+x0, y = i / w+y0;
+        int16_t x = (i % (w+1))+x0, y = i / (w+1)+y0;
         #ifndef TFT_NO_ROTATE
-        if (x >= 0 && y >= 0 && x < _rotate & 1 ? 160 : 128 && x < _rotate & 1 ? 128 : 160) {
+        if (x >= 0 && y >= 0 && x < (_rotate & 1 ? 160 : 128) && y < (_rotate & 1 ? 128 : 160)) {
         #else
-        if (x >= 0 && y >= 0 && x < 128 && x < 160) {
+        if (x >= 0 && y >= 0 && x < 128 && y < 160) {
         #endif
-        #else {
+        #else
+		{
         #endif
           sendByte((arr[i] & 0b11100000) | ((arr[i] & 0b00011000) >> 2));
           sendByte(((arr[i] & 0b00000111) << 2));
@@ -188,17 +194,19 @@ class microTFT {
       }
     }
     void bitmapRGB233(uint8_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
+	  w--;h--;
       start();
-      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max(x0+w, /*(int16_t)*/0), max(y0+h, /*(int16_t)*/0));
+      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)x0+w, (int16_t)0), max((int16_t)y0+h, (int16_t)0));
       for (size_t i = 0; i < w*h; i++) {
         #ifndef TFT_NO_CHECK_DOT
-        uint16_t x = (i % w)+x0, y = i / w+y0;
+        int16_t x = (i % (w+1))+x0, y = i / (w+1)+y0;
         #ifndef TFT_NO_ROTATE
-        if (x >= 0 && y >= 0 && x < _rotate & 1 ? 160 : 128 && x < _rotate & 1 ? 128 : 160) {
+        if (x >= 0 && y >= 0 && x < (_rotate & 1 ? 160 : 128) && y < (_rotate & 1 ? 128 : 160)) {
         #else
-        if (x >= 0 && y >= 0 && x < 128 && x < 160) {
+        if (x >= 0 && y >= 0 && x < 128 && y < 160) {
         #endif
-        #else {
+        #else
+		{
         #endif
           sendByte((arr[i] & 0b11000000) | ((arr[i] & 0b00111000) >> 3));
           sendByte(((arr[i] & 0b00000111) << 2));
@@ -207,51 +215,57 @@ class microTFT {
     }
     #ifndef TFT_PGMBMP
     void bitmapRGB888_P(const uint32_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
+	  w--;h--;
       start();
-      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max(x0+w, /*(int16_t)*/0), max(y0+h, /*(int16_t)*/0));
+      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)x0+w, (int16_t)0), max((int16_t)y0+h, (int16_t)0));
       for (size_t i = 0; i < w*h; i++) {
         #ifndef TFT_NO_CHECK_DOT
-        uint16_t x = (i % w)+x0, y = i / w+y0;
+        int16_t x = (i % (w+1))+x0, y = i / (w+1)+y0;
         #ifndef TFT_NO_ROTATE
-        if (x >= 0 && y >= 0 && x < _rotate & 1 ? 160 : 128 && x < _rotate & 1 ? 128 : 160) {
+        if (x >= 0 && y >= 0 && x < (_rotate & 1 ? 160 : 128) && y < (_rotate & 1 ? 128 : 160)) {
         #else
-        if (x >= 0 && y >= 0 && x < 128 && x < 160) {
+        if (x >= 0 && y >= 0 && x < 128 && y < 160) {
         #endif
-        #else {
+        #else
+		{
         #endif
           send565(rgb888to565(pgm_read_dword(&arr[i])));
         }
       }
     }
     void bitmapRGB565_P(const uint16_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
+	  w--;h--;
       start();
-      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max(x0+w, /*(int16_t)*/0), max(y0+h, /*(int16_t)*/0));
+      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)x0+w, (int16_t)0), max((int16_t)y0+h, (int16_t)0));
       for (size_t i = 0; i < w*h; i++) {
         #ifndef TFT_NO_CHECK_DOT
-        uint16_t x = (i % w)+x0, y = i / w+y0;
+        int16_t x = (i % (w+1))+x0, y = i / (w+1)+y0;
         #ifndef TFT_NO_ROTATE
-        if (x >= 0 && y >= 0 && x < _rotate & 1 ? 160 : 128 && x < _rotate & 1 ? 128 : 160) {
+        if (x >= 0 && y >= 0 && x < (_rotate & 1 ? 160 : 128) && y < (_rotate & 1 ? 128 : 160)) {
         #else
-        if (x >= 0 && y >= 0 && x < 128 && x < 160) {
+        if (x >= 0 && y >= 0 && x < 128 && y < 160) {
         #endif
-        #else {
+        #else
+		{
         #endif
           send565(pgm_read_word(&arr[i]));
         }
       }
     }
     void bitmapRGB323_P(const uint8_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
+	  w--;h--;
       start();
-      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max(x0+w, /*(int16_t)*/0), max(y0+h, /*(int16_t)*/0));
+      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)x0+w, (int16_t)0), max((int16_t)y0+h, (int16_t)0));
       for (size_t i = 0; i < w*h; i++) {
         #ifndef TFT_NO_CHECK_DOT
-        uint16_t x = (i % w)+x0, y = i / w+y0;
+        int16_t x = (i % (w+1))+x0, y = i / (w+1)+y0;
         #ifndef TFT_NO_ROTATE
-        if (x >= 0 && y >= 0 && x < _rotate & 1 ? 160 : 128 && x < _rotate & 1 ? 128 : 160) {
+        if (x >= 0 && y >= 0 && x < (_rotate & 1 ? 160 : 128) && y < (_rotate & 1 ? 128 : 160)) {
         #else
-        if (x >= 0 && y >= 0 && x < 128 && x < 160) {
+        if (x >= 0 && y >= 0 && x < 128 && y < 160) {
         #endif
-        #else {
+        #else
+		{
         #endif
           sendByte((pgm_read_byte(&arr[i]) & 0b11100000) | ((pgm_read_byte(&arr[i]) & 0b00011000) >> 2));
           sendByte(((pgm_read_byte(&arr[i]) & 0b00000111) << 2));
@@ -260,16 +274,17 @@ class microTFT {
     }
     void bitmapRGB233_P(const uint8_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
       start();
-      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max(x0+w, /*(int16_t)*/0), max(y0+h, /*(int16_t)*/0));
+      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)x0+w-1, (int16_t)0), max((int16_t)y0+h-1, (int16_t)0));
       for (size_t i = 0; i < w*h; i++) {
         #ifndef TFT_NO_CHECK_DOT
-        uint16_t x = (i % w)+x0, y = i / w+y0;
+        int16_t x = (i % w)+x0, y = i / w+y0;
         #ifndef TFT_NO_ROTATE
-        if (x >= 0 && y >= 0 && x < _rotate & 1 ? 160 : 128 && x < _rotate & 1 ? 128 : 160) {
+        if (x >= 0 && y >= 0 && x < (_rotate & 1 ? 160 : 128) && y < (_rotate & 1 ? 128 : 160)) {
         #else
-        if (x >= 0 && y >= 0 && x < 128 && x < 160) {
+        if (x >= 0 && y >= 0 && x < 128 && y < 160) {
         #endif
-        #else {
+        #else
+		{
         #endif
           sendByte((pgm_read_byte(&arr[i]) & 0b11000000) | ((pgm_read_byte(&arr[i]) & 0b00111000) >> 3));
           sendByte(((pgm_read_byte(&arr[i]) & 0b00000111) << 2));
@@ -390,7 +405,7 @@ class microTFT {
     uint8_t bclrH = 0x00, bclrL = 0x00; // фон
     uint8_t madctl = 0b11000000;  // регистр 0х36
     #ifndef TFT_NO_ROTATE // если надо
-    uint8_t _rotate;  // поворот
+    uint8_t _rotate=0;  // поворот
     #endif
     // отпралялки всякого
     void lcd7735_sendCmd(unsigned char cmd) {
