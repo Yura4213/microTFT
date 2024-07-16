@@ -137,7 +137,7 @@ class microTFT {
     #ifndef TFT_NO_CLRBMP
     void bitmapRGB888(uint32_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
 	  start();
-      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)x0+w-1, (int16_t)0), max((int16_t)y0+h-1, (int16_t)0));
+      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)(x0+w-1), (int16_t)0), max((int16_t)(y0+h-1), (int16_t)0));
       for (size_t i = 0; i < w*h; i++) {
         #ifndef TFT_NO_CHECK_DOT
         int16_t x = (i % w)+x0, y = i / w+y0;
@@ -155,7 +155,7 @@ class microTFT {
     }
     void bitmapRGB565(uint16_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
 	  start();
-      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)x0+w-1, (int16_t)0), max((int16_t)y0+h-1, (int16_t)0));
+      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)(x0+w-1), (int16_t)0), max((int16_t)(y0+h-1), (int16_t)0));
       for (size_t i = 0; i < w*h; i++) {
         #ifndef TFT_NO_CHECK_DOT
         int16_t x = (i % w)+x0, y = i / w+y0;
@@ -173,7 +173,7 @@ class microTFT {
     }
     void bitmapRGB323(uint8_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
 	  start();
-      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)x0+w-1, (int16_t)0), max((int16_t)y0+h-1, (int16_t)0));
+      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)(x0+w-1), (int16_t)0), max((int16_t)(y0+h-1), (int16_t)0));
       for (size_t i = 0; i < w*h; i++) {
         #ifndef TFT_NO_CHECK_DOT
         int16_t x = (i % w)+x0, y = i / w+y0;
@@ -192,7 +192,7 @@ class microTFT {
     }
     void bitmapRGB233(uint8_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
 	  start();
-      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)x0+w-1, (int16_t)0), max((int16_t)y0+h-1, (int16_t)0));
+      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)(x0+w-1), (int16_t)0), max((int16_t)(y0+h-1), (int16_t)0));
       for (size_t i = 0; i < w*h; i++) {
         #ifndef TFT_NO_CHECK_DOT
         int16_t x = (i % w)+x0, y = i / w+y0;
@@ -212,7 +212,7 @@ class microTFT {
     #ifndef TFT_PGMBMP
     void bitmapRGB888_P(const uint32_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
 	  start();
-      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)x0+w-1, (int16_t)0), max((int16_t)y0+h-1, (int16_t)0));
+      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)(x0+w-1), (int16_t)0), max((int16_t)(y0+h-1), (int16_t)0));
       for (size_t i = 0; i < w*h; i++) {
         #ifndef TFT_NO_CHECK_DOT
         int16_t x = (i % w)+x0, y = i / w+y0;
@@ -230,7 +230,7 @@ class microTFT {
     }
     void bitmapRGB565_P(const uint16_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
 	  start();
-      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)x0+w-1, (int16_t)0), max((int16_t)y0+h-1, (int16_t)0));
+      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)(x0+w-1), (int16_t)0), max((int16_t)(y0+h-1), (int16_t)0));
       for (size_t i = 0; i < w*h; i++) {
         #ifndef TFT_NO_CHECK_DOT
         int16_t x = (i % w)+x0, y = i / w+y0;
@@ -248,7 +248,7 @@ class microTFT {
     }
     void bitmapRGB323_P(const uint8_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
 	  start();
-      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)x0+w-1, (int16_t)0), max((int16_t)y0+h-1, (int16_t)0));
+      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)(x0+w-1), (int16_t)0), max((int16_t)(y0+h-1), (int16_t)0));
       for (size_t i = 0; i < w*h; i++) {
         #ifndef TFT_NO_CHECK_DOT
         int16_t x = (i % w)+x0, y = i / w+y0;
@@ -267,7 +267,7 @@ class microTFT {
     }
     void bitmapRGB233_P(const uint8_t* arr, uint16_t w, uint16_t h, int16_t x0 = 0, int16_t y0 = 0) {
       start();
-      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)x0+w-1, (int16_t)0), max((int16_t)y0+h-1, (int16_t)0));
+      startSend(max(x0, (int16_t)0), max(y0, (int16_t)0), max((int16_t)(x0+w-1), (int16_t)0), max((int16_t)(y0+h-1), (int16_t)0));
       for (size_t i = 0; i < w*h; i++) {
         #ifndef TFT_NO_CHECK_DOT
         int16_t x = (i % w)+x0, y = i / w+y0;
